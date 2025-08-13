@@ -6,6 +6,7 @@ use serenity::all::{CreateMessage, Http, UserId};
 use std::collections::HashSet;
 use std::env;
 use std::net::TcpStream;
+use std::path::PathBuf;
 use std::time::Duration;
 use tokio::time;
 use tracing::{error, info, warn};
@@ -226,7 +227,17 @@ impl MailNotifier {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    dotenv().ok();
+    let exe_path = env::current_exe().unwrap_or_else(|_| std::path::PathBuf::from("."));
+    let exe_dir = exe_path.parent().unwrap_or_else(|| std::path::Path::new("."));
+    let project_root = exe_dir.parent().unwrap().parent().unwrap();
+    let env_path = project_root.join(".env");
+    
+    if env_path.exists() {
+        dotenv::from_path(&env_path).ok();
+    } else {
+        dotenv().ok();
+    }
+    
     tracing_subscriber::fmt::init();
 
     info!("Starting Gmail to Discord notifier...");
