@@ -6,7 +6,6 @@ use serenity::all::{CreateMessage, Http, UserId};
 use std::collections::HashSet;
 use std::env;
 use std::net::TcpStream;
-use std::path::PathBuf;
 use std::time::Duration;
 use tokio::time;
 use tracing::{error, info, warn};
